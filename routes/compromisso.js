@@ -30,7 +30,6 @@ routes.get('/compromissos', (req, res) => {
     )
 });
 
-/* Para usar um endpoint de get com filtros, é necessário comentar o outro, caso contrário da conflito */
 routes.get('/compromissos/:idcontato', (req, res) => {
     db.findOne({ idcontato: req.params.idcontato }).sort({}).exec((err, compromisso) => {
         if (compromisso) {
@@ -42,8 +41,7 @@ routes.get('/compromissos/:idcontato', (req, res) => {
     )
 })    
 
-/* Para usar um endpoint de get com filtros, é necessário comentar o outro, caso contrário da conflito */
-routes.get('/compromissos/:data1&:data2', (req, res) => {    
+routes.get('/compromissos/data/:data1&:data2', (req, res) => {    
     db.find({ $and: [{data: {$gte: req.params.data1}}, {data: {$lte: req.params.data2}}] }).sort({}).exec((err, compromisso) => {
         if (compromisso) {
             res.json({ compromisso });

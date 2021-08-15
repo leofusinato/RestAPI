@@ -7,6 +7,18 @@ let db = new NeDB({
     autoload: true
 });
 
+routes.get('/usuarios', (req, res) => {
+    db.find({}).sort({ username: 1 }).exec(
+        (err, usuarios) => {
+            if (err) {
+                res.status(400).json({ error: err })
+            } else {
+                res.json({ usuarios });
+            }
+        }
+    )
+})
+
 routes.post('/usuarios', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
     db.insert(req.body, (err, usuario) => {

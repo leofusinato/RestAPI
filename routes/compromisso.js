@@ -30,9 +30,19 @@ routes.get('/compromissos', (req, res) => {
     )
 });
 
-/* Para usar um endpoint de get com filtros, é necessário comentar o outro, caso contrário da conflito */
-routes.get('/compromissos/:idcontato', (req, res) => {
-    db.findOne({ idcontato: req.params.idcontato }).sort({}).exec((err, compromisso) => {
+routes.get('/compromissos/user/:id', (req, res) => {
+    db.find({ idusuario: req.params.id }).sort({}).exec((err, compromissos) => {
+        if (compromissos) {
+            res.json({ compromissos });
+        } else {
+            res.end('Compromisso não encontrado');
+        }
+    }
+    )
+})    
+
+routes.get('/compromissos/:id', (req, res) => {
+    db.findOne({ _id: req.params.id }).sort({}).exec((err, compromisso) => {
         if (compromisso) {
             res.json({ compromisso });
         } else {
@@ -42,16 +52,37 @@ routes.get('/compromissos/:idcontato', (req, res) => {
     )
 })    
 
-/* Para usar um endpoint de get com filtros, é necessário comentar o outro, caso contrário da conflito */
-routes.get('/compromissos/:data1&:data2', (req, res) => {    
-    db.find({ $and: [{data: {$gte: req.params.data1}}, {data: {$lte: req.params.data2}}] }).sort({}).exec((err, compromisso) => {
-        if (compromisso) {
-            res.json({ compromisso });
+routes.get('/compromissos/user/:id/contato/:idcontato', (req, res) => {
+    db.find({ $and: [{idcontato: req.params.idcontato}, {idusuario: req.params.id}] }).sort({}).exec((err, compromissos) => {
+        if (compromissos) {
+            res.json({ compromissos });
         } else {
             res.end('Compromisso não encontrado');
         }
     }
     )
+})    
+
+routes.get('/compromissos/user/:id/data/:data1&:data2', (req, res) => {    
+    db.find({ $and: [{data: {$gte: req.params.data1}}, {data: {$lte: req.params.data2}}, {idusuario: req.params.id}] }).sort({}).exec((err, compromissos) => {
+        if (compromisso) {
+            res.json({ compromissos });
+        } else {
+            res.end('Compromisso não encontrado');
+        }
+    }
+    )
+})
+
+routes.put('/compromissos/:id', (req, res) => {
+    res.setHeader('Content-Type', 'application/json')
+    db.update({ _id: req.params.id }, req.body, (err, compromisso) => {
+        if (err) {
+            res.status(400).json({ error: err })
+        } else {
+            res.status(200).json(req.body);
+        }
+    })
 })
 
 routes.delete('/compromissos/:id', (req, res) => {

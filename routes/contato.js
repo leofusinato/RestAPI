@@ -18,6 +18,28 @@ routes.get('/contatos/:nome', (req, res) => {
     )
 })
 
+routes.get('/contatos/user/:id', (req, res) => {
+    db.find({ usuario: req.params.id }).sort({}).exec((err, contatos) => {
+        if (contatos) {
+            res.json({ contatos });
+        } else {
+            res.end('Contato não encontrado');
+        }
+    }
+    )
+})
+
+routes.get('/contatos/id/:id', (req, res) => {
+    db.findOne({ _id: req.params.id }).sort({}).exec((err, contato) => {
+        if (contato) {
+            res.json({ contato });
+        } else {
+            res.end('Contato não encontrado');
+        }
+    }
+    )
+})
+
 routes.get('/contatos', (req, res) => {
     db.find({}).sort({ nome: 1 }).exec(
         (err, contatos) => {

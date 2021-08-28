@@ -65,7 +65,7 @@ routes.get('/compromissos/user/:id/contato/:idcontato', (req, res) => {
 
 routes.get('/compromissos/user/:id/data/:data1&:data2', (req, res) => {    
     db.find({ $and: [{data: {$gte: req.params.data1}}, {data: {$lte: req.params.data2}}, {idusuario: req.params.id}] }).sort({}).exec((err, compromissos) => {
-        if (compromisso) {
+        if (compromissos) {
             res.json({ compromissos });
         } else {
             res.end('Compromisso não encontrado');
